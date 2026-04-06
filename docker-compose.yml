@@ -1,0 +1,29 @@
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    env_file:
+      - ./auth-service/.env  
+    environment:
+      - DB_HOST=auth-db
+      - DB_PORT=5432
+      - DB_USER=admin
+      - DB_PASS=123456
+      - DB_NAME=auth_db
+    depends_on:
+      - auth-db
+
+  auth-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: auth_db
+    ports:
+      - "5433:5432"  

@@ -7,6 +7,7 @@ import { RefreshTokenRepository } from './repository/refresh-token.repository';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthGrpcController } from './auth.grpc.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     RefreshTokenRepository,
     JwtStrategy,
   ],
-  controllers: [AuthController],
+  controllers: [
+    AuthController,
+    AuthGrpcController
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

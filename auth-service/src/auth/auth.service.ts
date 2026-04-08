@@ -15,6 +15,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async verifyToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      const user = await this.userRepository.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      return user;
+    } catch (err) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+  
   async register(email: string, username: string, password: string) {
     const passwordHash = await bcrypt.hash(password, 10);
 

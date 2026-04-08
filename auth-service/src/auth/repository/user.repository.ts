@@ -45,4 +45,13 @@ export class UserRepository {
       },
     });
   }
+
+  findById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        role: true,
+      },
+    });
+  }
 }

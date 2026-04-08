@@ -1,12 +1,27 @@
 
 services:
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+      - ./proto-contracts:/proto-contracts
+    env_file:
+      - .env
+    command: npm run start:dev  
+
   auth-service:
     build: ./auth-service
     ports:
       - "3001:3000"
+      - "50051:50051"
     volumes:
       - ./auth-service:/app
       - /app/node_modules
+      - ./proto-contracts:/proto-contracts
     env_file:
       - ./auth-service/.env  
     environment:

@@ -8,6 +8,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthGrpcController } from './auth.grpc.controller';
+import { GrpcErrorInterceptor } from './common/grpc-error.interceptor';
 
 @Module({
   imports: [
@@ -22,11 +23,9 @@ import { AuthGrpcController } from './auth.grpc.controller';
     RoleRepository,
     RefreshTokenRepository,
     JwtStrategy,
+    GrpcErrorInterceptor,
   ],
-  controllers: [
-    AuthController,
-    AuthGrpcController
-  ],
+  controllers: [AuthController, AuthGrpcController],
   exports: [AuthService],
 })
 export class AuthModule {}

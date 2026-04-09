@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthExceptions } from 'src/auth/common/auth.exception';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 type CreateUserInput = {
@@ -10,14 +11,14 @@ type CreateUserInput = {
 @Injectable()
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
-  
+
   async createUser(data: CreateUserInput, defaultRoleName = 'user') {
     const role = await this.prisma.role.findUnique({
       where: { name: defaultRoleName },
     });
 
     if (!role) {
-      throw new Error(`Default role '${defaultRoleName}' not found`);
+      throw AuthExceptions.defaultRoleNotFound();
     }
 
     return this.prisma.user.create({

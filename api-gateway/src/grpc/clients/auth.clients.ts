@@ -1,23 +1,29 @@
 import type { ClientGrpc } from '@nestjs/microservices';
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import type { LoginRequest, RegisterRequest, RefreshRequest, LogoutRequest } from '../../generated/auth';
+import type {
+  LoginRequest,
+  LogoutRequest,
+  LogoutResponse,
+  RefreshRequest,
+  RegisterRequest,
+  RegisterResponse,
+  TokenPair,
+} from '../../generated/auth';
 
 interface AuthService {
-  login(data: LoginRequest): Observable<any>;
-  verifyToken(data: { token: string }): Observable<any>;
-  register(data: RegisterRequest): Observable<any>;
-  refresh(data: RefreshRequest): Observable<any>;
-  logout(data: LogoutRequest): Observable<any>;
+  login(data: LoginRequest): Observable<TokenPair>;
+  verifyToken(data: { token: string }): Observable<unknown>;
+  register(data: RegisterRequest): Observable<RegisterResponse>;
+  refresh(data: RefreshRequest): Observable<TokenPair>;
+  logout(data: LogoutRequest): Observable<LogoutResponse>;
 }
 
 @Injectable()
 export class AuthClient implements OnModuleInit {
   private authService: AuthService;
 
-  constructor(
-    @Inject('AUTH_PACKAGE') private client: ClientGrpc,
-  ){}
+  constructor(@Inject('AUTH_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
     this.authService = this.client.getService<AuthService>('AuthService');
@@ -42,4 +48,4 @@ export class AuthClient implements OnModuleInit {
   logout(data: LogoutRequest) {
     return this.authService.logout(data);
   }
-  }
+}

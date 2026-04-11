@@ -8,8 +8,6 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
-
   // Create permissions
   const permissions = [
     // User permissions
@@ -31,7 +29,6 @@ async function main() {
     { name: 'permissions:delete', resource: 'permissions', action: 'delete', description: 'Delete permissions' },
   ];
 
-  console.log('📝 Creating permissions...');
   const createdPermissions = await Promise.all(
     permissions.map(permission =>
       prisma.permission.upsert({
@@ -43,7 +40,6 @@ async function main() {
   );
 
   // Create roles
-  console.log('👥 Creating roles...');
   const userRole = await prisma.role.upsert({
     where: { name: 'user' },
     update: {},
@@ -63,7 +59,6 @@ async function main() {
   });
 
   // Assign permissions to roles
-  console.log('🔗 Assigning permissions to roles...');
 
   // User role permissions (limited)
   const userPermissions = createdPermissions.filter(p =>
@@ -106,12 +101,6 @@ async function main() {
       })
     )
   );
-
-  console.log('✅ Database seeding completed successfully!');
-  console.log(`📊 Created ${createdPermissions.length} permissions`);
-  console.log(`👥 Created ${userRole.name} and ${adminRole.name} roles`);
-  console.log(`🔗 Assigned ${userPermissions.length} permissions to ${userRole.name} role`);
-  console.log(`🔗 Assigned ${createdPermissions.length} permissions to ${adminRole.name} role`);
 }
 
 main()

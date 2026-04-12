@@ -1,24 +1,37 @@
-# ===== BUILD STAGE =====
+# ===== BUILD =====
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+# 1. Copy package.json của api-gateway
+COPY api-gateway/package*.json ./
 RUN npm install
 
-COPY . .
+# 2. Copy source code
+COPY api-gateway/. .
+
+# 3. Copy proto (shared)
+COPY proto-contracts ./proto-contracts
+
+# 4. Build
 RUN npm run build
 
-# ===== PRODUCTION STAGE =====
+# ===== RUN =====
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+ENV NODE_ENV=production
+ENV TZ=Asia/Ho_Chi_Minh
+
+# 5. Install production deps
+COPY api-gateway/package*.json ./
 RUN npm install --omit=dev
 
+# 6. Copy build output + proto
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/proto-contracts ./proto-contracts
 
-EXPOSE 3000
+EXPOSE 3000 50051
 
 CMD ["node", "dist/main.js"]

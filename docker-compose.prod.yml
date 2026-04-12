@@ -1,23 +1,27 @@
-version: '3.8'
+version: "3.9"
 
 services:
   api-gateway:
     build:
-      context: ./api-gateway
+      context: .
+      dockerfile: api-gateway/dockerfile
     container_name: api-gateway
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     env_file:
       - .env.production
     depends_on:
       - auth-service
+    networks:
+      - backend
 
   auth-service:
     build:
-      context: ./auth-service
+      context: .
+      dockerfile: auth-service/dockerfile
     container_name: auth-service
-    restart: always
+    restart: unless-stopped
     ports:
       - "3001:3000"
       - "50051:50051"
@@ -25,17 +29,24 @@ services:
       - ./auth-service/.env.production
     depends_on:
       - auth-db
+    networks:
+      - backend
 
   auth-db:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: auth-db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: 0248qazwsx
+      POSTGRES_PASSWORD: db0248qazwsx
       POSTGRES_DB: auth_db
     volumes:
       - auth_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
 volumes:
   auth_data:
+
+networks:
+  backend:

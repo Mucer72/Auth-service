@@ -14,7 +14,7 @@ import { join } from 'path';
         options: {
           url: process.env.AUTH_SERVICE_URL,
           package: 'auth',
-          protoPath: join('/proto-contracts/auth.proto'),
+          protoPath: '/app/proto-contracts/auth.proto',
         },
       },
     ]),

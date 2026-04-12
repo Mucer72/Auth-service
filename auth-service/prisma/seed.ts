@@ -8,6 +8,7 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
+  await prisma.$connect();
   // Create permissions
   const permissions = [
     // User permissions

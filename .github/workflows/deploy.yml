@@ -28,9 +28,8 @@ jobs:
           echo "USERNAME=${{ secrets.DOCKER_USERNAME }}"
           echo "SERVICE=${{ matrix.service }}"
       
-      - name: Set image name
-        run: |
-          echo "IMAGE_NAME=${{ env.DOCKER_USERNAME }}/${{ matrix.service }}" >> $GITHUB_ENV
+      - name: Set IMAGE variable
+        run: echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}" >> $GITHUB_ENV
 
       - name: Login Docker Hub
         run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin

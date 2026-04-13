@@ -40,6 +40,11 @@ jobs:
           -f ./${{ matrix.service }}/Dockerfile \
           . \
           --push
+      - name: Create env files
+        run: |
+         echo "${{ secrets.GLOBAL_ENV }}" > .env
+         echo "${{ secrets.AUTH_ENV }}" > auth-service/.env
+         echo "${{ secrets.API_ENV }}" > api-gateway/.env    
 
   deploy:
     runs-on: ubuntu-latest

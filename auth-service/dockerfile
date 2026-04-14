@@ -15,6 +15,7 @@ COPY auth-service/prisma ./prisma
 COPY proto-contracts ./proto-contracts
 
 # 3. Generate Prisma client
+ENV DATABASE_URL="postgresql://postgres:dummy@localhost:5432/dummy"
 RUN npx prisma generate
 
 # 4. Build

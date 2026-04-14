@@ -10,7 +10,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env.production
+      - .env
     depends_on:
       - auth-service
     networks:
@@ -26,7 +26,7 @@ services:
       - "3001:3000"
       - "50051:50051"
     env_file:
-      - ./auth-service/.env.production
+      - auth-service/.env
     depends_on:
       - auth-db
     networks:
